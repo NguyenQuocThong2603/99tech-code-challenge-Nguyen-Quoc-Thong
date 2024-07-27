@@ -1,0 +1,342 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Problem 5 CRUD Interface",
+    "version": "1.0.0"
+  },
+  "schemes": ["http"],
+  "servers": [{
+    "url": "http://localhost:3000/"
+  }],
+  "paths": {
+    "/users": {
+      "get": {
+        "parameters": [{
+            "name": "name",
+            "in": "query",
+            "description": "Name of the user",
+            "schema": {
+              "type": "string",
+              "example": "thong2"
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Email of the user",
+            "schema": {
+              "type": "string",
+              "example": "thong2@yopmail.com"
+            }
+          },
+          {
+            "name": "age",
+            "in": "query",
+            "description": "Age of the user",
+            "schema": {
+              "type": "string",
+              "example": 12
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limitation",
+            "schema": {
+              "type": "string",
+              "example": "12"
+            }
+          }
+        ],
+        "tags": ["Get users by filter"],
+        "summary": "Get users by filter",
+        "description": "Get Get users by filter in the service",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Users"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Create user"],
+        "summary": "Create user",
+        "description": "Create user in the service(email is required)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateUserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Email already exists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": ["Get Detail Of User"],
+        "summary": "Get detail of user",
+        "description": "Get detail information of user by id",
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the user to get",
+          "schema": {
+            "type": "string",
+            "example": "66a366756293985995a0cefe"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "user": {
+                      "$ref": "#/components/schemas/User"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the user to update",
+          "schema": {
+            "type": "string",
+            "example": "66a366756293985995a0cefe"
+          }
+        }],
+        "tags": ["Update user"],
+        "summary": "Update user",
+        "description": "Update user in the service",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateUserResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "description": "ID of the user to delete",
+          "schema": {
+            "type": "string",
+            "example": "66a366756293985995a0cefe"
+          }
+        }],
+        "tags": ["Delete user"],
+        "summary": "Delete user",
+        "description": "Delete user in the service",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "66a366756293985995a0cefe"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "User not found"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Users": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/User"
+        }
+      },
+      "CreateUserInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "thong5"
+          },
+          "email": {
+            "type": "string",
+            "example": "thong5@yopmail.com"
+          },
+          "age": {
+            "type": "number",
+            "example": 12
+          }
+        }
+      },
+      "UpdateUserInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "thong5"
+          },
+          "age": {
+            "type": "number",
+            "example": 12
+          }
+        }
+      },
+      "CreateUserResponse": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Create user successfully"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        }
+      },
+      "UpdateUserResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Update user successfully"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        }
+      },
+      "User": {
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "66a366756293985995a0cefe"
+          },
+          "name": {
+            "type": "string",
+            "example": "thong5"
+          },
+          "email": {
+            "type": "string",
+            "example": "thong5@yopmail.com"
+          },
+          "age": {
+            "type": "number",
+            "example": 12
+          }
+        }
+      }
+    }
+  }
+}
